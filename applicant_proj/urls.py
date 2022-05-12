@@ -26,9 +26,5 @@ urlpatterns = [
     # admin/
     path('admin/', admin.site.urls),
 
-    # applicants/
-    # path('applicants/', include('applicants.urls')),
-
-    # __debug__/
-    # path('__debug__/', include('debug_toolbar.urls')),
+    path('home/', include('applicants.urls')),
 ]

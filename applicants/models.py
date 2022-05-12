@@ -5,7 +5,7 @@ from django.db import models
 # Create your models here.
 
 class applicant(models.Model):
-    id_no = models.TextField()
+    id_no = models.IntegerField()
     name = models.TextField()
     skills = models.TextField(default='Skills')
 
