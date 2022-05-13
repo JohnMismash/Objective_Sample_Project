@@ -4,19 +4,16 @@
 # Author: John 'Jack' Mismash
 # Date: 5/10/22
 
-from ctypes import sizeof
-from itertools import count
-from django.http import HttpResponse
 from django.shortcuts import render
 from applicants.summary import Summary
-import string
+from bs4 import BeautifulSoup as bs
 
 # Create your views here.
 
 def applicants_view_json(request):
     with open('data.json', "r") as json_file:
         applicant_summary = Summary.from_json(json_file.read())
-        applicant_summary.__ref__()
+        # applicant_summary.__ref__()
 
         jobs = applicant_summary.jobs
         applicants = applicant_summary.applicants
@@ -35,6 +32,7 @@ def applicants_view_db(request):
 def applicants_view_ref(request):
     return render(request, 'index.html')
 
+# Method for creating the html of each request type.
 def create_html(jobs, applicants, skills):
 
     html = """<!DOCTYPE html>
@@ -71,41 +69,77 @@ def create_html(jobs, applicants, skills):
                                 <th>Skills</th>
                                 <th>Cover Letter Paragraph</th>
                             </tr>
-                            </thead>"""
+                                </thead>
+                                <tbody>"""
 
-    job_counter = len(jobs)
-    applicant_counter = 0
-
-
-    skill_counter = len(skills)
     counter = 0
 
     for job in jobs:
-        counter += 1
+
+        job_id = job.id
+        current_job_applicants = []
         
         for applicant in applicants:
-            if (applicant.job_id == counter):
-                applicant_counter += 1
+            if (applicant.job_id == job_id):
+                current_job_applicants.append(applicant)
+                    
 
-        
-        html = html + "<tr>"
-    
-        html = html + "<tr>"
-        html = html + "<td rowspan= " + str(applicant_counter) + ">" + job.name + "</td>"
-        
-        for applicant in applicants:
-            if (applicant.job_id == counter):
-                html = html + "<td>" + applicant.name + "</td>"
+        skill_counter = 0
 
-        # html = html + "<td>" + skill.name + "</td>"
-        html = html + "</tr>"
-        html = html + "</tr>"
-    html = html + """ </table>
-                        </div>
+        for skill in skills:  
+            if (skill.applicant_id == applicant.id):
+                skill_counter += 1
+
+        html = html + "<tr>"
+        html = html + "<td rowspan=\"" + str(skill_counter) + "\">" + job.name + "</td>"
+
+        skill_counter = 0
+
+        for applicant in current_job_applicants:
+            counter += 1
+            current_applicant_skills = []
+            
+            print(applicant.name)
+
+            applicant_skill_counter = 0
+
+            for skill in skills:  
+                if (skill.applicant_id == applicant.id):
+                    current_applicant_skills.append(skill)
+                    print(skill.name)
+                    skill_counter += 1
+                    applicant_skill_counter += 1
+
+            if (counter is not 1):
+                html = html + "<tr>"
+
+            html = html + "<td rowspan=\"" + str(applicant_skill_counter) + "\">" + applicant.name + "</td>"
+            html = html + "<td rowspan=\"" + str(applicant_skill_counter) + "\">" + applicant.email + "</td>"
+            html = html + "<td rowspan=\"" + str(applicant_skill_counter) + "\">" + applicant.website + "</td>"
+            html = html + "<td>" + str(current_applicant_skills[0].name) + "</td>"
+            html = html + "<td rowspan=\"" + str(applicant_skill_counter) + "\">" + applicant.cover_letter + "</td>"
+
+            html = html + "</tr>"
+
+            for skill_no in range(applicant_skill_counter):
+                if (skill_no is not 1):
+                    html = html + "<tr>"
+                    html = html + "<td>" + str(current_applicant_skills[skill_no].name) + "</td>"
+                    html = html + "</tr>"
+
+    html = html + "</tr>"
+
+    html = html + """     </tbody>
+                        </table>
+                       </div>
                       </body>
-                    </html> """
+                    </html>"""
 
+    output = bs(html, 'html.parser').prettify()
     file = open('templates/test.html', "w")
-    file.write(html)
+    file.write(output)
     file.close
+
+  
+
 
