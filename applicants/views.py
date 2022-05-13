@@ -1,7 +1,14 @@
+# Objective - Sample Project:
+# View Configuration
+
+# Author: John 'Jack' Mismash
+# Date: 5/10/22
+
 from unicodedata import name
 from django.http import HttpResponse
 from django.shortcuts import render
 from applicants.summary import Summary
+import templates
 
 
 # Create your views here.

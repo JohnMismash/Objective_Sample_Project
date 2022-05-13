@@ -1,3 +1,9 @@
+# Objective - Sample Project:
+# Settings/Project Configuration
+
+# Author: John 'Jack' Mismash
+# Date: 5/10/22
+
 """
 Django settings for applicant_proj project.
 
@@ -11,6 +17,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -61,7 +68,7 @@ ROOT_URLCONF = 'applicant_proj.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

@@ -1,3 +1,9 @@
+# Objective - Sample Project:
+# Application Configuration
+
+# Author: John 'Jack' Mismash
+# Date: 5/10/22from django.apps import AppConfig
+
 from django.apps import AppConfig
 
 

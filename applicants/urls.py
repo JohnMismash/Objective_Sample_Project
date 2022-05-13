@@ -1,6 +1,11 @@
+# Objective - Sample Project:
+# applicants URL Configuration
+
+# Author: John 'Jack' Mismash
+# Date: 5/10/22
+
 from django.urls import include, path
 from . import views
-
 
 urlpatterns = [
     path('applicants-JSON/', views.applicants_view_json),

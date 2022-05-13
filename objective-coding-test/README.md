@@ -82,6 +82,7 @@ Project Notes:
 - 'python manage.py migrate' syncs all local settings with the db.sqlite3 database.
 - 'python manage.py createsuperuser' creates a SuperUser to manage all admin settings such as users or groups.
 - The request.user parameter can allow the develop to see the admins and users who request the page.
+- Template reference is independent of OS, can be referenced within the project.
 
 Solution Notes:
 - The Jobs and corresponding Applicants have a one to many relationship, where one Job may have multiple Applicants.
