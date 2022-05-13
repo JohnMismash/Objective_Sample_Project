@@ -1,3 +1,10 @@
+# Objective - Sample Project:
+# Model Configuration
+
+# Author: John 'Jack' Mismash
+# Date: 5/10/22
+
+
 from asyncio.base_subprocess import WriteSubprocessPipeProto
 import email
 from django.db import models
