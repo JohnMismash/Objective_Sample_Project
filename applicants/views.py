@@ -37,6 +37,7 @@ def applicants_view_ref(request):
     return render(request, 'index.html')
 
 # Method for creating the html of each request type.
+# Note: This HTML could have simply been done with templates and utilizing for loopps/conditions within the HTML doc itself (see base.html).
 def create_html(jobs, applicants, skills):
 
     # Given CSS styled HTML for basic layout properties.
