@@ -7,11 +7,15 @@
 from django.shortcuts import render
 from applicants.summary import Summary
 from bs4 import BeautifulSoup as bs
+from applicants.models import Applicant
+from applicants.models import Job
+from applicants.models import Skill
 
 # Create your views here.
 
 # Renders the html produced from the .json file given.
 def applicants_view_json(request):
+
     with open('data.json', "r") as json_file:
         applicant_summary = Summary.from_json(json_file.read())
     
@@ -23,14 +27,31 @@ def applicants_view_json(request):
 
     return render(request, 'JSONView.html')
 
-# Renders the html produced from the sql dump file.
+# Renders the html produced from pushing data to the data.sqlite3 file, then reading back from the database, rendering from sqllite.html.
+def applicants_view_sqllite3(request):
+    with open('data.json', "r") as json_file:
+        applicant_summary = Summary.from_json(json_file.read())
+
+        jobs = applicant_summary.jobs
+        applicants = applicant_summary.applicants
+        skills = applicant_summary.skills
+
+    for job in jobs:
+        entry = Job(id_no=job.id, name=job.name)
+        entry.save()
+
+    for applicant in applicants:
+        entry = Applicant(id_no=applicant.id, name=applicant.name, email=applicant.email, cover_letter=applicant.cover_letter, job_id=applicant.job_id)
+        entry.save()
+
+    for skill in skills:
+        entry = Skill(id_no=skill.id, name=skill.name, applicant_id=skill.applicant_id)
+        entry.save()
+
+    return render(request, 'sqllite.html')
+
 def applicants_view_sql(request):
-
-
-    return render(request, 'SQLDataView.html')
-
-def applicants_view_db(request):
-    return render(request, 'dbView.html')
+    return render(request, 'sqlView.html')
 
 # Reference rendering of the provided index.html file.
 def applicants_view_ref(request):

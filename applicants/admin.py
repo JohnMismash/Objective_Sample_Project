@@ -5,8 +5,8 @@
 # Date: 5/10/22
 
 from django.contrib import admin
-from .models import applicant
+from .models import Applicant
 
 # Register your models here.
 
-admin.site.register(applicant)
+admin.site.register(Applicant)
