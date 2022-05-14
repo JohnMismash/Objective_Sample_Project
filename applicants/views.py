@@ -13,15 +13,14 @@ from bs4 import BeautifulSoup as bs
 def applicants_view_json(request):
     with open('data.json', "r") as json_file:
         applicant_summary = Summary.from_json(json_file.read())
-        # applicant_summary.__ref__()
-
+    
         jobs = applicant_summary.jobs
         applicants = applicant_summary.applicants
         skills = applicant_summary.skills
 
         create_html(jobs, applicants, skills)
 
-    return render(request, 'test.html') # render(request, 'JSONView.html', {'jobs': jobs, 'applicants': applicants, 'skills': skills})
+    return render(request, 'JSONView.html')
 
 def applicants_view_sql(request):
     return render(request, 'SQLDataView.html')
@@ -35,6 +34,7 @@ def applicants_view_ref(request):
 # Method for creating the html of each request type.
 def create_html(jobs, applicants, skills):
 
+    # Given CSS styled HTML for basic layout properties.
     html = """<!DOCTYPE html>
                     <html>
                     <head>
@@ -72,10 +72,11 @@ def create_html(jobs, applicants, skills):
                                 </thead>
                                 <tbody>"""
 
-    counter = 0
+    # Counts the total number of jobs.
+    job_counter = 0
 
     for job in jobs:
-
+        job_counter += 1
         job_id = job.id
         current_job_applicants = []
         
@@ -83,36 +84,38 @@ def create_html(jobs, applicants, skills):
             if (applicant.job_id == job_id):
                 current_job_applicants.append(applicant)
                     
-
         skill_counter = 0
 
-        for skill in skills:  
-            if (skill.applicant_id == applicant.id):
-                skill_counter += 1
+        # Finds the number of skills total for the current job and its specific applicants.
+        for applicant in current_job_applicants:
+            for skill in skills:
+                  
+                if (skill.applicant_id == applicant.id):
+                    skill_counter += 1
+                    print(skill.name)
 
+        # Build basic Job HTML
         html = html + "<tr>"
         html = html + "<td rowspan=\"" + str(skill_counter) + "\">" + job.name + "</td>"
-
-        skill_counter = 0
+        job_done = False
 
         for applicant in current_job_applicants:
-            counter += 1
-            current_applicant_skills = []
-            
-            print(applicant.name)
-
             applicant_skill_counter = 0
+            current_applicant_skills = []
 
+            # Finds the number of skills for the current applicant.
             for skill in skills:  
                 if (skill.applicant_id == applicant.id):
                     current_applicant_skills.append(skill)
-                    print(skill.name)
-                    skill_counter += 1
                     applicant_skill_counter += 1
 
-            if (counter is not 1):
+            # Does not add a <tr> if the job was just listed in the HTML.
+            if (job_done):
                 html = html + "<tr>"
+                
+            job_done = True
 
+            # Build basic applicant HTML
             html = html + "<td rowspan=\"" + str(applicant_skill_counter) + "\">" + applicant.name + "</td>"
             html = html + "<td rowspan=\"" + str(applicant_skill_counter) + "\">" + applicant.email + "</td>"
             html = html + "<td rowspan=\"" + str(applicant_skill_counter) + "\">" + applicant.website + "</td>"
@@ -121,22 +124,24 @@ def create_html(jobs, applicants, skills):
 
             html = html + "</tr>"
 
-            for skill_no in range(applicant_skill_counter):
-                if (skill_no is not 1):
-                    html = html + "<tr>"
-                    html = html + "<td>" + str(current_applicant_skills[skill_no].name) + "</td>"
-                    html = html + "</tr>"
-
-    html = html + "</tr>"
-
+            # Build basic skill HTML
+            if (applicant_skill_counter is not 1):
+                for skill_no in range(applicant_skill_counter):
+                    if (skill_no is not 0):
+                        html = html + "<tr>"
+                        html = html + "<td>" + str(current_applicant_skills[skill_no].name) + "</td>"
+                        html = html + "</tr>"
+    
+    # Build remaining closing HTML
     html = html + """     </tbody>
                         </table>
                        </div>
                       </body>
                     </html>"""
 
+    # Formats the HTML and writes to a new file.
     output = bs(html, 'html.parser').prettify()
-    file = open('templates/test.html', "w")
+    file = open('templates/JSONView.html', "w")
     file.write(output)
     file.close
 
