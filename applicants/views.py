@@ -10,6 +10,7 @@ from bs4 import BeautifulSoup as bs
 
 # Create your views here.
 
+# Renders the html produced from the .json file given.
 def applicants_view_json(request):
     with open('data.json', "r") as json_file:
         applicant_summary = Summary.from_json(json_file.read())
@@ -22,12 +23,16 @@ def applicants_view_json(request):
 
     return render(request, 'JSONView.html')
 
+# Renders the html produced from the sql dump file.
 def applicants_view_sql(request):
+
+
     return render(request, 'SQLDataView.html')
 
 def applicants_view_db(request):
     return render(request, 'dbView.html')
 
+# Reference rendering of the provided index.html file.
 def applicants_view_ref(request):
     return render(request, 'index.html')
 
@@ -92,7 +97,6 @@ def create_html(jobs, applicants, skills):
                   
                 if (skill.applicant_id == applicant.id):
                     skill_counter += 1
-                    print(skill.name)
 
         # Build basic Job HTML
         html = html + "<tr>"
@@ -125,9 +129,9 @@ def create_html(jobs, applicants, skills):
             html = html + "</tr>"
 
             # Build basic skill HTML
-            if (applicant_skill_counter is not 1):
+            if (applicant_skill_counter != 1):
                 for skill_no in range(applicant_skill_counter):
-                    if (skill_no is not 0):
+                    if (skill_no != 0):
                         html = html + "<tr>"
                         html = html + "<td>" + str(current_applicant_skills[skill_no].name) + "</td>"
                         html = html + "</tr>"
