@@ -13,7 +13,7 @@ from django.db import models
 # Create your models here.
 
 class Applicant(models.Model):
-    id_no = models.IntegerField(default = 0)
+    id = models.IntegerField(primary_key=True, default=0)
     name = models.TextField(default = "")
     email = models.TextField(default = "")
     website = models.TextField(default = "")
@@ -24,14 +24,14 @@ class Applicant(models.Model):
         return self.name
 
 class Job(models.Model):
-    id_no = models.IntegerField()
+    id = models.IntegerField(primary_key=True, default=0)
     name = models.TextField()
 
     def __str__(self):
         return self.name
 
 class Skill(models.Model):
-    id_no = models.IntegerField()
+    id = models.IntegerField(primary_key=True, default=0)
     name = models.TextField()
     applicant_id = models.IntegerField()
 

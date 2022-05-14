@@ -5,8 +5,10 @@
 # Date: 5/10/22
 
 from django.shortcuts import render
+from applicants.models import Skill
 from applicants.summary import Summary
 from bs4 import BeautifulSoup as bs
+
 from applicants.models import Applicant
 from applicants.models import Job
 from applicants.models import Skill
@@ -23,32 +25,77 @@ def applicants_view_json(request):
         applicants = applicant_summary.applicants
         skills = applicant_summary.skills
 
-        create_html(jobs, applicants, skills)
+        filename = 'templates/JSONView.html'
+
+        create_html(jobs, applicants, skills, filename)
 
     return render(request, 'JSONView.html')
 
-# Renders the html produced from pushing data to the data.sqlite3 file, then reading back from the database, rendering from sqllite.html.
+# Renders the html produced from pushing data to the data.sqlite3 file, then reading back from the database, and rendering from the sqllite.html file.
 def applicants_view_sqllite3(request):
     with open('data.json', "r") as json_file:
         applicant_summary = Summary.from_json(json_file.read())
 
+        # Data read from data.json file.
         jobs = applicant_summary.jobs
         applicants = applicant_summary.applicants
         skills = applicant_summary.skills
 
+        delete_from_db()
+
+        # Write data into the db.
+        write_to_db(jobs, applicants, skills)
+
+        # Data read back from db.
+        jobs, applicants, skills = read_from_db()
+        
+        filename = 'templates/sqlliteView.html'
+
+        create_html(jobs, applicants, skills, filename)
+
+        return render(request, 'sqlliteView.html')
+
+# Deletes all data from the db to repopulate all values from the file (assuming the file is constantly changing, or writing to the db is based on a different source).
+def delete_from_db():
+    jobs = Job.objects.all()
+    applicants = Applicant.objects.all()
+    skills = Skill.objects.all()
+
     for job in jobs:
-        entry = Job(id_no=job.id, name=job.name)
+        temp = Job.objects.get(id=job.id)
+        temp.delete()
+
+    for applicant in applicants:
+        temp = Applicant.objects.get(id=applicant.id)
+        temp.delete()
+
+    for skill in skills:
+        temp = Skill.objects.get(id=skill.id)
+        temp.delete()
+
+
+def write_to_db(jobs, applicants, skills):
+    for job in jobs:
+        entry = Job(id=job.id, name=job.name)
         entry.save()
 
     for applicant in applicants:
-        entry = Applicant(id_no=applicant.id, name=applicant.name, email=applicant.email, cover_letter=applicant.cover_letter, job_id=applicant.job_id)
+        entry = Applicant(id=applicant.id, name=applicant.name, email=applicant.email, website=applicant.website, cover_letter=applicant.cover_letter, job_id=applicant.job_id)
         entry.save()
 
     for skill in skills:
-        entry = Skill(id_no=skill.id, name=skill.name, applicant_id=skill.applicant_id)
+        entry = Skill(id=skill.id, name=skill.name, applicant_id=skill.applicant_id)
         entry.save()
 
-    return render(request, 'sqllite.html')
+    return
+
+def read_from_db():
+
+    jobs = Job.objects.all()
+    applicants = Applicant.objects.all()
+    skills = Skill.objects.all()
+
+    return jobs, applicants, skills
 
 def applicants_view_sql(request):
     return render(request, 'sqlView.html')
@@ -59,7 +106,7 @@ def applicants_view_ref(request):
 
 # Method for creating the html of each request type.
 # Note: This HTML could have simply been done with templates and utilizing for loopps/conditions within the HTML doc itself (see base.html).
-def create_html(jobs, applicants, skills):
+def create_html(jobs, applicants, skills, filename):
 
     # Given CSS styled HTML for basic layout properties.
     html = """<!DOCTYPE html>
@@ -167,9 +214,11 @@ def create_html(jobs, applicants, skills):
 
     # Formats the HTML and writes to a new file.
     output = bs(html, 'html.parser').prettify()
-    file = open('templates/JSONView.html', "w")
+    file = open(filename, "w")
     file.write(output)
     file.close
+
+    return html
 
   
 

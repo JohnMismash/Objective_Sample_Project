@@ -83,8 +83,11 @@ Project Notes:
 - 'python manage.py createsuperuser' creates a SuperUser to manage all admin settings such as users or groups.
 - The request.user parameter can allow the develop to see the admins and users who request the page.
 - Template reference is independent of OS, can be referenced within the project.
+- Redirecting is possible through a request handler with the redirect() function.
 
 Solution Notes:
 - The Jobs and corresponding Applicants have a one to many relationship, where one Job may have multiple Applicants.
 - The Applicants and their corresponding Skills have a one to many relationship, where one applicant may have multiple skills, but only one of each skill.
--
+- The data.sqllite database is connected to this project.
+- For reading the data, this project assumes all values are re-written to the database or updated from another source, although I manually upload the same values every time
+  with the data from the data.json file for the sake of showing the data is being re-populated every time.
