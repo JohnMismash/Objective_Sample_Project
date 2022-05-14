@@ -23,6 +23,8 @@ from django.contrib import admin
 from django.urls import include, path
 import debug_toolbar
 
+import applicants_sql
+
 urlpatterns = [
     # admin/
     path('admin/', admin.site.urls),

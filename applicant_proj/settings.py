@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'applicants.apps.ApplicantsConfig',
+    'applicants_sql.apps.ApplicantsSqlConfig',
     'debug_toolbar'
 ]
 
@@ -91,6 +92,15 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'data.sqlite3',
+    },
+
+    'sql_user': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'data.sql',
+        'USER': 'root',
+        'PASSWORD': 'Be@con123',
+        'HOST': 'localhost',
+        'PORT': '3306',
     }
 }
 

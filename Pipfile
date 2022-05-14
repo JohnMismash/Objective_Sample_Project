@@ -8,6 +8,7 @@ django = "*"
 django-debug-toolbar = "*"
 flask = "*"
 bs4 = "*"
+beautifulsoup4 = "*"
 
 [dev-packages]
 

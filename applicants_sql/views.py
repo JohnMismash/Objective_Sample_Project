@@ -1,38 +1,11 @@
-# Objective - Sample Project:
-# View Configuration
-
-# Author: John 'Jack' Mismash
-# Date: 5/10/22
-
 from django.shortcuts import render
-from applicants.models import Skill
-from applicants.summary import Summary
+from .models import Job, Applicant, Skill
+from applicants_sql.summary import Summary
 from bs4 import BeautifulSoup as bs
-
-from applicants.models import Applicant
-from applicants.models import Job
-from applicants.models import Skill
 
 # Create your views here.
 
-# Renders the html produced from the .json file given.
-def applicants_view_json(request):
-
-    with open('data.json', "r") as json_file:
-        applicant_summary = Summary.from_json(json_file.read())
-    
-        jobs = applicant_summary.jobs
-        applicants = applicant_summary.applicants
-        skills = applicant_summary.skills
-
-        filename = 'templates/JSONView.html'
-
-        create_html(jobs, applicants, skills, filename)
-
-    return render(request, 'JSONView.html')
-
-# Renders the html produced from pushing data to the data.sqlite3 file, then reading back from the database, and rendering from the sqllite.html file.
-def applicants_view_sqllite3(request):
+def applicants_view_sql(request):
     with open('data.json', "r") as json_file:
         applicant_summary = Summary.from_json(json_file.read())
 
@@ -49,11 +22,12 @@ def applicants_view_sqllite3(request):
         # Data read back from db.
         jobs, applicants, skills = read_from_db()
         
-        filename = 'templates/sqlliteView.html'
+        filename = 'templates/SQLView.html'
 
         create_html(jobs, applicants, skills, filename)
 
-        return render(request, 'sqlliteView.html')
+
+    return render(request, 'sqlView.html')
 
 # Deletes all data from the db to repopulate all values from the file (assuming the file is constantly changing, or writing to the db is based on a different source).
 def delete_from_db():
@@ -97,11 +71,8 @@ def read_from_db():
 
     return jobs, applicants, skills
 
-# Reference rendering of the provided index.html file.
-def applicants_view_ref(request):
-    return render(request, 'index.html')
 
-# Method for creating the html of each request type.
+    # Method for creating the html of each request type.
 # Note: This HTML could have simply been done with templates and utilizing for loopps/conditions within the HTML doc itself (see base.html).
 def create_html(jobs, applicants, skills, filename):
 
@@ -216,7 +187,3 @@ def create_html(jobs, applicants, skills, filename):
     file.close
 
     return html
-
-  
-
-
