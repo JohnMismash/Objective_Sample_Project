@@ -96,7 +96,7 @@ DATABASES = {
 
     'sql_user': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'data.sql',
+        'NAME': 'application_proj_db',
         'USER': 'root',
         'PASSWORD': 'Be@con123',
         'HOST': 'localhost',

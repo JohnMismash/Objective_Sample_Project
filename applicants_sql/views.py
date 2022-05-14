@@ -1,3 +1,9 @@
+# Objective - Sample Project:
+# View Configuration
+
+# Author: John 'Jack' Mismash
+# Date: 5/10/22
+
 from django.shortcuts import render
 from .models import Job, Applicant, Skill
 from applicants_sql.summary import Summary

@@ -4,10 +4,7 @@
 # Author: John 'Jack' Mismash
 # Date: 5/10/22
 
-
-from asyncio.base_subprocess import WriteSubprocessPipeProto
 from asyncio.windows_events import NULL
-from unicodedata import name
 from django.db import models
 
 # Create your models here.

@@ -1,10 +1,13 @@
 # Objective - Sample Project:
-# applicants URL Configuration
+# applicants_sql URL Configuration
 
 # Author: John 'Jack' Mismash
 # Date: 5/10/22
 
 
-urlpatterns = [
+from django.urls import path
+from . import views
 
+urlpatterns = [
+    path('applicants-sql/', views.applicants_view_sql),
 ]

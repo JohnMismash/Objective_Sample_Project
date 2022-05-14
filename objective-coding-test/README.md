@@ -89,5 +89,11 @@ Solution Notes:
 - The Jobs and corresponding Applicants have a one to many relationship, where one Job may have multiple Applicants.
 - The Applicants and their corresponding Skills have a one to many relationship, where one applicant may have multiple skills, but only one of each skill.
 - The data.sqllite database is connected to this project.
-- For reading the data, this project assumes all values are re-written to the database or updated from another source, although I manually upload the same values every time
-  with the data from the data.json file for the sake of showing the data is being re-populated every time.
+  - For reading the data, this project assumes all values are re-written to the database or updated from another source, although I manually upload the same values every time
+    with the data from the data.json file for the sake of showing the data is being re-populated every time.
+- The data.sql file dump is not correctly connecting to mySQL server. I created a mySQL server and database, dumped the data into it, but I can't seem to figure out how to connect it
+  to the applicants_sql app so it will pull data from the correct database.
+- There are three urls to follow:
+  - home/applicants-JSON: Corresponds to the JSON data being rendered.
+  - home/applicants-sqllite: Corresponds to the sqllite3 database.
+  - db/applicants-sql: Corresponds to the sql database.

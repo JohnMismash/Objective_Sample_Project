@@ -32,6 +32,8 @@ urlpatterns = [
     # /home/
     path('home/', include('applicants.urls')),
 
+    path('db/', include('applicants_sql.urls')),
+
     # __debug__/
     path('__debug__/', include(debug_toolbar.urls)),
 ]
